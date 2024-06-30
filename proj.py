@@ -16,8 +16,8 @@ def visualize(image, faces, thickness=2):
         cv.circle(image, (coords[12], coords[13]), 2, (0, 255, 255), thickness)
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-r", "--reference_image", required=True, help="C:\\Users\\asus\\OneDrive\\Desktop\\ml face detection\\opencv-4.x\\opencv-4.x\\project\\aaddhar.jpg")
-ap.add_argument("-q", "--query_image", required=True, help="C:\\Users\\asus\\OneDrive\\Desktop\\ml face detection\\opencv-4.x\\opencv-4.x\\project\\mephoto.jpg")
+ap.add_argument("-r", "--reference_image", required=True, help="reference image location")
+ap.add_argument("-q", "--query_image", required=True, help=" test image location")
 args = vars(ap.parse_args())
 
 ref_image = cv.imread(args["reference_image"])
@@ -35,7 +35,7 @@ score_threshold = 0.9
 nms_threshold = 0.3
 top_k = 5000
 
-faceDetector = cv.FaceDetectorYN.create("face_detection_yunet_2023mar.onnx", "C:\\Users\\asus\\OneDrive\\Desktop\\ml face detection\\opencv-4.x\\opencv-4.x\\project\\face_detection_yunet_2023mar.onnx", (ref_image.shape[1], ref_image.shape[0]), score_threshold, nms_threshold, top_k)
+faceDetector = cv.FaceDetectorYN.create("face_detection_yunet_2023mar.onnx", "", (ref_image.shape[1], ref_image.shape[0]), score_threshold, nms_threshold, top_k)
 faceInAdhaar = faceDetector.detect(ref_image)
 if faceInAdhaar is None or faceInAdhaar[1] is None:
     print("No faces detected in the reference image.")
@@ -53,7 +53,7 @@ else:
     cv.imshow("Query Image", query_image)
     cv.waitKey(0)
 
-recognizer = cv.FaceRecognizerSF.create("face_recognition_sface_2021dec.onnx", "C:\\Users\\asus\\OneDrive\\Desktop\\ml face detection\\opencv-4.x\\opencv-4.x\\project\\face_recognition_sface_2021dec.onnx")
+recognizer = cv.FaceRecognizerSF.create("face_recognition_sface_2021dec.onnx", "")
 
 if faceInAdhaar is not None and faceInAdhaar[1] is not None and faceInQuery is not None and faceInQuery[1] is not None:
     face1_align = recognizer.alignCrop(ref_image, faceInAdhaar[1][0])
